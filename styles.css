@@ -659,14 +659,38 @@ tbody tr:hover {
 }
 
 @media (max-width: 760px) {
+  body {
+    font-size: 16px;
+  }
+
   .page-shell {
-    width: min(100% - 24px, 1280px);
-    padding-top: 12px;
+    width: min(100% - 20px, 1280px);
+    padding: 10px 0 28px;
   }
 
   .app-header {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .brand-mark {
+    width: 46px;
+    height: 46px;
+    font-size: 14px;
+  }
+
+  .brand h1 {
+    font-size: 20px;
+  }
+
+  .brand p {
+    font-size: 14px;
+  }
+
+  .main-content {
+    gap: 14px;
+    margin-top: 14px;
   }
 
   .side-nav,
@@ -676,19 +700,55 @@ tbody tr:hover {
 
   .side-nav {
     justify-content: stretch;
+    gap: 4px;
+    padding: 4px;
+    overflow-x: auto;
   }
 
   .side-nav a {
-    flex: 1;
+    flex: 1 0 auto;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 12px;
+    font-size: 14px;
     text-align: center;
   }
 
   .topbar-actions button {
-    flex: 1;
+    flex: 1 1 calc(50% - 5px);
+    min-height: 46px;
+    padding: 0 12px;
+    font-size: 14px;
   }
 
   .hero-panel {
-    padding: 20px;
+    gap: 14px;
+    padding: 18px;
+  }
+
+  h2 {
+    font-size: 30px;
+    line-height: 1.12;
+  }
+
+  h3 {
+    font-size: 21px;
+  }
+
+  .eyebrow,
+  .panel-label,
+  .group-title {
+    font-size: 12px;
+  }
+
+  .follow-up-card {
+    padding: 16px;
+  }
+
+  .next-follow-up {
+    font-size: 15px;
   }
 
   .stats-grid,
@@ -697,15 +757,246 @@ tbody tr:hover {
     grid-template-columns: 1fr;
   }
 
+  .stats-grid {
+    gap: 10px;
+  }
+
+  .stat-card {
+    min-height: 72px;
+    padding: 16px;
+  }
+
+  .stat-card span {
+    font-size: 14px;
+  }
+
+  .stat-card strong {
+    font-size: 30px;
+  }
+
+  .form-panel,
+  .table-panel {
+    padding: 18px;
+  }
+
+  .prospect-form {
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .form-group {
+    gap: 14px;
+    padding: 16px;
+  }
+
+  label {
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  input,
+  select,
+  textarea {
+    min-height: 48px;
+    padding: 12px 13px;
+    font-size: 16px;
+  }
+
+  textarea {
+    min-height: 118px;
+  }
+
+  .generated-link {
+    gap: 7px;
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .primary-button,
+  .ghost-button,
+  .icon-button,
+  .mini-button {
+    min-height: 46px;
+    font-size: 14px;
+  }
+
+  .filters {
+    gap: 10px;
+    margin: 16px 0;
+  }
+
+  .table-wrap {
+    overflow: visible;
+    border: 0;
+    background: transparent;
+  }
+
+  table,
+  thead,
+  tbody,
+  tr,
+  td {
+    display: block;
+    width: 100%;
+  }
+
+  table {
+    min-width: 0;
+    background: transparent;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody {
+    display: grid;
+    gap: 12px;
+  }
+
+  td {
+    display: grid;
+    grid-template-columns: minmax(92px, 34%) minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    padding: 12px 14px;
+    border-top: 0;
+  }
+
+  tr {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: 0 1px 2px rgba(29, 29, 31, 0.03);
+  }
+
+  tr:hover {
+    background: var(--surface);
+  }
+
+  td::before {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  td:nth-child(1)::before {
+    content: "Prospek";
+  }
+
+  td:nth-child(2)::before {
+    content: "Kontak";
+  }
+
+  td:nth-child(3)::before {
+    content: "Jasa";
+  }
+
+  td:nth-child(4)::before {
+    content: "Tanggal";
+  }
+
+  td:nth-child(5)::before {
+    content: "Status";
+  }
+
+  td:nth-child(6)::before {
+    content: "Aksi";
+  }
+
+  .prospect-name {
+    font-size: 16px;
+  }
+
+  .subtext {
+    font-size: 13px;
+  }
+
+  .badge {
+    min-height: 26px;
+    padding: 4px 9px;
+    font-size: 12px;
+  }
+
+  .status-select {
+    width: 100%;
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .action-row .mini-button {
+    width: 100%;
+  }
+
+  .empty-state {
+    display: block;
+    padding: 28px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    font-size: 15px;
+  }
+
   .section-heading {
     align-items: stretch;
+    flex-direction: column;
+  }
+
+  .detail-dialog {
+    width: min(100vw - 20px, 720px);
+  }
+
+  .detail-header,
+  .detail-body {
+    padding: 16px;
+  }
+
+  .detail-header {
     flex-direction: column;
   }
 }
 
 @media (max-width: 480px) {
+  .page-shell {
+    width: min(100% - 16px, 1280px);
+  }
+
   .form-panel,
   .table-panel {
     padding: 16px;
+  }
+
+  .hero-panel {
+    padding: 16px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+  }
+
+  .topbar-actions button {
+    flex-basis: 100%;
+  }
+
+  td {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .action-row {
+    grid-template-columns: 1fr;
   }
 }
