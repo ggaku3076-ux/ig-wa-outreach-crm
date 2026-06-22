@@ -71,7 +71,7 @@ function normalizeWhatsapp(value) {
 }
 
 function targetName(name) {
-  return name.trim() || "Klinik";
+  return name.trim() || "Akun Katering";
 }
 
 function makeMessage(name) {
@@ -79,9 +79,9 @@ function makeMessage(name) {
 
   return `Halo ${target}, salam kenal ya 👋
 
-Saya Dari Gexxaweb, kebetulan sering bantu klinik-klinik gigi bikin website. Bukan mau jualan langsung sih, tapi saya perhatikan ${target} di Instagram kontennya sudah bagus banget, sayang kalau calon pasien yang cari di Google belum nemu info selengkap itu.
+Saya Dari Gexxaweb, kebetulan sering bantu bisnis katering bikin website. Bukan mau jualan langsung sih, tapi saya perhatikan konten Instagram ${target} sudah menggugah selera banget, sayang kalau calon pelanggan yang cari di Google belum nemu info menu dan harga selengkap itu.
 
-Banyak klinik yang saya bantu bilang, setelah punya website yang pas, mereka jadi lebih tenang karena pasien bisa baca info lengkap sendiri tanpa harus tanya-tanya via WA berulang kali. Booking juga jadi lebih tertib, dan tim admin nggak gampang burnout.
+Banyak klien katering yang saya bantu bilang, setelah punya website yang pas, mereka jadi lebih tenang karena pelanggan bisa lihat katalog menu, paket harga, dan testimoni secara lengkap tanpa harus tanya-tanya via WA berulang kali. Booking dan konfirmasi pesanan juga jadi lebih tertib, tim admin nggak gampang kewalahan balas chat yang sama terus-menerus.
 
 Kalau ${target} mungkin tertarik eksplor opsi ini someday, saya punya paket yang budgetnya cukup bersahabat (mulai 350rb sudah include domain). Tapi tentu nggak buru-buru, mau kenalan dan liat contoh kerjanya dulu juga boleh banget 😊
 
