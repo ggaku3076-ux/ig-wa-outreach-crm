@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pengaturan - Outreach CRM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <!-- App Header Container (injected dynamically) -->
+      <div id="app-header-container"></div>
+
+      <main class="main-content">
+        <div class="settings-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Aplikasi</p>
+              <h3>Pengaturan Outreach & Database</h3>
+            </div>
+          </div>
+
+          <div class="prospect-form">
+            <!-- Supabase Cloud Sync Section -->
+            <div class="form-group">
+              <p class="group-title">1. Sinkronisasi Awan (Supabase)</p>
+              <p style="font-size:12px; color: var(--muted); line-height:1.4; margin-bottom: 6px;">
+                Hubungkan dengan database cloud Supabase Anda agar data tersimpan secara otomatis, terupdate secara real-time, dan bisa disinkronkan di perangkat lain (laptop/HP).
+              </p>
+              
+              <label>
+                Supabase Project URL
+                <input id="supabaseUrl" type="url" placeholder="https://xxxx.supabase.co" />
+              </label>
+
+              <label>
+                Supabase Anon Key
+                <input id="supabaseKey" type="text" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." />
+              </label>
+
+              <div class="button-row" style="margin-top: 8px;">
+                <button id="saveSupabaseBtn" type="button" class="primary-button" style="min-height:36px; padding:0 16px; font-size:12px;">Simpan & Hubungkan</button>
+                <button id="disconnectSupabaseBtn" type="button" class="danger-button" style="min-height:36px; padding:0 16px; font-size:12px;">Putuskan Koneksi</button>
+              </div>
+
+              <!-- Integration Steps Guide -->
+              <details style="margin-top: 12px; font-size: 12px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px;">
+                <summary style="cursor:pointer; font-weight:600; color: var(--text-soft);">Cara Setup Tabel Supabase (Klik untuk melihat)</summary>
+                <ol style="margin-left: 16px; margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">
+                  <li>Buat project baru di <a href="https://supabase.com" target="_blank" style="color:var(--primary);">Supabase</a>.</li>
+                  <li>Buka <b>SQL Editor</b> lalu jalankan SQL berikut untuk membuat tabel:
+                    <pre style="background:rgba(0,0,0,0.3); padding:8px; border-radius:4px; font-family:monospace; margin-top:4px; overflow-x:auto; user-select:all; white-space:pre-wrap;">
+CREATE TABLE prospects (
+  id TEXT PRIMARY KEY,
+  name TEXT,
+  niche TEXT,
+  service TEXT,
+  source TEXT,
+  instagram TEXT,
+  instagramLink TEXT,
+  whatsapp TEXT,
+  sentDate TEXT,
+  channel TEXT,
+  status TEXT,
+  followUpDate TEXT,
+  notes TEXT,
+  updatedAt TEXT
+);</pre>
+                  </li>
+                  <li>Matikan <b>RLS (Row Level Security)</b> untuk tabel <code>prospects</code> agar aplikasi client-side bisa menulis data langsung, atau tambahkan policy public read/write.</li>
+                  <li>Salin <b>Project URL</b> dan <b>Anon Key</b> dari menu Settings -> API ke input di atas.</li>
+                </ol>
+              </details>
+            </div>
+
+            <!-- Outreach Template Section -->
+            <div class="form-group">
+              <p class="group-title">2. Template Pesan WhatsApp Pitching</p>
+              <p style="font-size:12px; color: var(--muted); line-height:1.4; margin-bottom: 6px;">
+                Ubah template pesan pitching WhatsApp sesuai keinginan Anda. Karakter di dalam kurung kurawal akan otomatis diganti dengan data prospek.
+              </p>
+
+              <div class="template-editor">
+                <div class="template-tokens">
+                  <span class="token-badge">{name}</span>
+                  <span class="token-badge">{niche}</span>
+                  <span class="token-badge">{service}</span>
+                </div>
+                <textarea id="messageTemplate" rows="10" style="font-family:inherit; font-size:13px;" placeholder="Tulis template pesan pitching di sini..."></textarea>
+              </div>
+
+              <div class="button-row" style="margin-top: 8px;">
+                <button id="saveTemplateBtn" type="button" class="primary-button" style="min-height:36px; padding:0 16px; font-size:12px;">Simpan Template</button>
+                <button id="resetTemplateBtn" type="button" class="ghost-button" style="min-height:36px; padding:0 16px; font-size:12px;">Reset Default</button>
+              </div>
+            </div>
+
+            <!-- Data Actions: Backup, Import, Clear Database -->
+            <div class="form-group full-width" style="margin-top: 10px;">
+              <p class="group-title">3. Manajemen Database Lokal</p>
+              <p style="font-size:12px; color: var(--muted); line-height:1.4; margin-bottom: 12px;">
+                Ekspor data Anda ke file CSV atau backup mentah ke file JSON. Anda juga dapat memulihkan (import) backup data Anda di sini atau mengosongkan seluruh database lokal.
+              </p>
+
+              <div class="button-row" style="flex-wrap: wrap;">
+                <button id="exportCsvBtn" type="button" class="ghost-button">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Export ke CSV
+                </button>
+                
+                <button id="backupJsonBtn" type="button" class="ghost-button">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                  Backup Database (JSON)
+                </button>
+
+                <button id="importJsonBtn" type="button" class="ghost-button">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Import Database (JSON)
+                </button>
+
+                <input id="importFileInput" type="file" class="hidden" accept="application/json,.json" style="display:none;" />
+
+                <button id="clearDbBtn" type="button" class="danger-button">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  Hapus Semua Data
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="common.js"></script>
+    <script src="settings.js"></script>
+  </body>
+</html>

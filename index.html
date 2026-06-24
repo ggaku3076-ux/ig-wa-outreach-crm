@@ -3,246 +3,81 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IG & WA Outreach CRM</title>
+    <title>Dashboard - Outreach CRM</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="page-shell">
-      <header class="app-header" id="dashboard">
-        <div class="brand">
-          <div class="brand-mark">OC</div>
-          <div>
-            <h1>Outreach CRM</h1>
-            <p>Instagram dan WhatsApp</p>
-          </div>
-        </div>
-
-        <nav class="side-nav" aria-label="Navigasi utama">
-          <a href="#dashboard" class="active">Dashboard</a>
-          <a href="#form-section">Input</a>
-          <a href="#prospect-table">Prospek</a>
-        </nav>
-
-        <div class="topbar-actions">
-          <button id="importButton" class="ghost-button" type="button">Import JSON</button>
-          <button id="backupButton" class="ghost-button" type="button">Backup JSON</button>
-          <button id="seedButton" class="ghost-button" type="button">Hapus data</button>
-          <button id="exportButton" class="primary-button" type="button">Export CSV</button>
-          <input id="importFile" class="hidden" type="file" accept="application/json,.json" />
-        </div>
-      </header>
+      <!-- App Header Container (injected dynamically) -->
+      <div id="app-header-container"></div>
 
       <main class="main-content">
+        <!-- Hero Panel -->
         <section class="hero-panel">
           <div>
-            <p class="eyebrow">Dashboard outreach</p>
-            <h2>Data prospek DM yang rapi, cepat, dan mudah dipantau.</h2>
+            <p class="eyebrow">Outreach Dashboard</p>
+            <h2>Statistik prospek Anda rapi, cepat, dan mudah dipantau.</h2>
           </div>
           <div class="follow-up-card">
             <p class="panel-label">Follow up terdekat</p>
-            <div id="nextFollowUp" class="next-follow-up">Belum ada jadwal.</div>
+            <div id="nextFollowUp" class="next-follow-up">Menghubungkan data...</div>
           </div>
         </section>
 
+        <!-- Stats Grid -->
         <section class="stats-grid" id="statsGrid" aria-label="Ringkasan prospek"></section>
 
-        <section class="workspace">
-          <div class="form-panel" id="form-section">
-            <div class="section-heading">
-              <div>
-                <p class="eyebrow">Input cepat</p>
-                <h3 id="formTitle">Tambah prospek</h3>
-              </div>
-              <button id="cancelEditButton" class="ghost-button hidden" type="button">Batal edit</button>
+        <!-- Recent Activity & Database overview -->
+        <div class="table-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Aktivitas Terbaru</p>
+              <h3>Prospek Terbaru</h3>
             </div>
-
-            <form id="prospectForm" class="prospect-form">
-              <input type="hidden" id="prospectId" />
-
-              <div class="form-group">
-                <p class="group-title">Profil</p>
-                <label>
-                  Nama
-                  <input id="name" type="text" placeholder="Contoh: Rafi Studio" required />
-                </label>
-
-                <label>
-                  Niche / bidang bisnis
-                  <select id="niche">
-                    <option value="">Pilih niche</option>
-                    <option value="Klinik Gigi">Klinik Gigi</option>
-                    <option value="Catering">Catering</option>
-                    <option value="Skincare">Skincare</option>
-                    <option value="Kuliner">Kuliner</option>
-                    <option value="Fashion">Fashion</option>
-                    <option value="Properti">Properti</option>
-                    <option value="Pendidikan">Pendidikan</option>
-                    <option value="Lainnya">Lainnya</option>
-                  </select>
-                </label>
-
-                <label>
-                  Jenis jasa yang ditawarkan
-                  <select id="service">
-                    <option value="">Pilih jasa</option>
-                    <option value="Landing Page">Landing Page</option>
-                    <option value="Company Profile">Company Profile</option>
-                    <option value="Website Booking">Website Booking</option>
-                    <option value="Katalog Online">Katalog Online</option>
-                    <option value="Toko Online">Toko Online</option>
-                    <option value="Maintenance Website">Maintenance Website</option>
-                    <option value="Lainnya">Lainnya</option>
-                  </select>
-                </label>
-              </div>
-
-              <div class="form-group">
-                <p class="group-title">Kontak</p>
-                <label>
-                  Sumber kontak
-                  <select id="source" required>
-                    <option value="Instagram">Instagram</option>
-                    <option value="WhatsApp">WhatsApp</option>
-                    <option value="Keduanya">Keduanya</option>
-                  </select>
-                </label>
-
-                <label>
-                  Username Instagram
-                  <input id="instagram" type="text" placeholder="@username" />
-                </label>
-
-                <label>
-                  Link profil Instagram
-                  <input id="instagramLink" type="url" placeholder="https://instagram.com/username" />
-                </label>
-
-                <label>
-                  Nomor WhatsApp
-                  <input id="whatsapp" type="tel" placeholder="62812..." />
-                </label>
-              </div>
-
-              <div class="form-group">
-                <p class="group-title">Outreach</p>
-                <label>
-                  Tanggal dikirim pesan
-                  <input id="sentDate" type="date" />
-                </label>
-
-                <label>
-                  Channel pesan
-                  <select id="channel" required>
-                    <option value="Instagram DM">Instagram DM</option>
-                    <option value="WhatsApp">WhatsApp</option>
-                    <option value="Keduanya">Keduanya</option>
-                  </select>
-                </label>
-
-                <label>
-                  Status prospek
-                  <select id="status" required>
-                    <option value="Belum dikirim">Belum dikirim</option>
-                    <option value="Sudah dikirim">Sudah dikirim</option>
-                    <option value="Membalas">Membalas</option>
-                    <option value="Tertarik">Tertarik</option>
-                    <option value="Follow up">Follow up</option>
-                    <option value="Closing">Closing</option>
-                    <option value="Tidak tertarik">Tidak tertarik</option>
-                  </select>
-                </label>
-
-                <label>
-                  Tanggal follow up berikutnya
-                  <input id="followUpDate" type="date" />
-                </label>
-              </div>
-
-              <label class="full-width">
-                Catatan
-                <textarea id="notes" rows="4" placeholder="Contoh: sudah tanya harga, follow up paket basic besok"></textarea>
-              </label>
-
-              <div class="generated-link full-width">
-                <span>Link WhatsApp otomatis</span>
-                <a id="generatedWaLink" href="#" target="_blank" rel="noreferrer">Isi nomor WhatsApp dulu</a>
-              </div>
-
-              <button class="primary-button full-width" type="submit">Simpan prospek</button>
-            </form>
+            <a href="prospects.html" class="primary-button" style="min-height:36px; padding: 0 16px; font-size:12px;">Lihat Semua Database</a>
           </div>
 
-          <div class="table-panel" id="prospect-table">
-            <div class="section-heading">
-              <div>
-                <p class="eyebrow">Database</p>
-                <h3>Data prospek</h3>
-              </div>
-              <span id="resultCount" class="result-count">0 data</span>
-            </div>
-
-            <div class="filters">
-              <input id="searchInput" type="search" placeholder="Cari nama, username, atau nomor WA" />
-              <select id="statusFilter">
-                <option value="Semua">Semua status</option>
-              </select>
-              <select id="sourceFilter">
-                <option value="Semua">Semua sumber</option>
-                <option value="Instagram">Instagram</option>
-                <option value="WhatsApp">WhatsApp</option>
-                <option value="Keduanya">Keduanya</option>
-              </select>
-              <select id="channelFilter">
-                <option value="Semua">Semua channel</option>
-                <option value="Instagram DM">Instagram DM</option>
-                <option value="WhatsApp">WhatsApp</option>
-                <option value="Keduanya">Keduanya</option>
-              </select>
-              <select id="sortSelect">
-                <option value="sentDateDesc">Tanggal pesan terbaru</option>
-                <option value="sentDateAsc">Tanggal pesan terlama</option>
-                <option value="followUpAsc">Follow up terdekat</option>
-                <option value="followUpDesc">Follow up terjauh</option>
-              </select>
-            </div>
-
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Prospek</th>
-                    <th>Kontak</th>
-                    <th>Jasa</th>
-                    <th>Tanggal</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="prospectRows"></tbody>
-              </table>
-            </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Prospek</th>
+                  <th>Kontak</th>
+                  <th>Jasa</th>
+                  <th>Tanggal Pesan</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="recentRows">
+                <tr>
+                  <td colspan="6" class="empty-state">Mengambil data terbaru...</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </section>
+        </div>
       </main>
     </div>
 
+    <!-- Detail Dialog -->
     <dialog id="detailDialog" class="detail-dialog">
       <div class="detail-header">
         <div>
           <p class="eyebrow">Detail prospek</p>
           <h3 id="detailName">Nama prospek</h3>
         </div>
-        <button id="closeDetailButton" class="icon-button" type="button" aria-label="Tutup detail">Tutup</button>
+        <button id="closeDetailButton" class="ghost-button" type="button" style="min-height:32px; padding:0 12px; font-size:12px;">Tutup</button>
       </div>
       <div id="detailBody" class="detail-body"></div>
     </dialog>
 
-    <script src="app.js?v=20260622-catering"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="common.js"></script>
+    <script src="dashboard.js"></script>
   </body>
 </html>
