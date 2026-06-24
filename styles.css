@@ -40,6 +40,58 @@
   --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  --brand-gradient: linear-gradient(to right, #ffffff, #c7d2fe);
+  --dialog-bg: #111827;
+  --input-bg: rgba(10, 15, 30, 0.6);
+  --input-bg-focus: rgba(10, 15, 30, 0.8);
+  --detail-p-bg: rgba(0, 0, 0, 0.2);
+}
+
+html[data-theme="light"] {
+  --bg: #f3f4f6;
+  --bg-gradient: radial-gradient(circle at 50% 0%, #e2e8f0 0%, #f3f4f6 70%);
+  --surface: rgba(255, 255, 255, 0.7);
+  --surface-border: rgba(0, 0, 0, 0.08);
+  --surface-hover: rgba(0, 0, 0, 0.03);
+  --surface-soft: rgba(243, 244, 246, 0.6);
+  --surface-muted: rgba(229, 231, 235, 0.8);
+  
+  --text: #111827;
+  --text-soft: #374151;
+  --muted: #6b7280;
+  --line: rgba(0, 0, 0, 0.08);
+  --line-strong: rgba(0, 0, 0, 0.15);
+  
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --primary-soft: rgba(79, 70, 229, 0.15);
+  --primary-glow: rgba(79, 70, 229, 0.4);
+  
+  --green: #10b981;
+  --green-soft: rgba(16, 185, 129, 0.15);
+  --green-text: #059669;
+  
+  --yellow: #d97706;
+  --yellow-soft: rgba(217, 119, 6, 0.15);
+  --yellow-text: #b45309;
+  
+  --red: #e11d48;
+  --red-soft: rgba(225, 29, 72, 0.15);
+  --red-text: #be123c;
+  
+  --purple: #7c3aed;
+  --purple-soft: rgba(124, 58, 237, 0.15);
+  --purple-text: #6d28d9;
+  
+  --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.1);
+  
+  --brand-gradient: linear-gradient(to right, #111827, #4f46e5);
+  --dialog-bg: #ffffff;
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --input-bg-focus: #ffffff;
+  --detail-p-bg: rgba(0, 0, 0, 0.05);
 }
 
 * {
@@ -50,7 +102,14 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+html[data-theme="dark"] {
   color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
 }
 
 body {
@@ -130,7 +189,7 @@ body {
   font-size: 18px;
   font-weight: 600;
   line-height: 1.2;
-  background: linear-gradient(to right, #ffffff, #c7d2fe);
+  background: var(--brand-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -335,7 +394,7 @@ h2 {
 }
 
 .stat-card strong {
-  color: #ffffff;
+  color: var(--text);
   font-size: 32px;
   font-weight: 700;
   line-height: 1.1;
@@ -414,8 +473,8 @@ textarea {
   min-height: 44px;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
-  background: rgba(10, 15, 30, 0.6);
-  color: #ffffff;
+  background: var(--input-bg);
+  color: var(--text);
   padding: 10px 14px;
   outline: none;
   font-size: 14px;
@@ -437,12 +496,12 @@ select:focus,
 textarea:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-  background: rgba(10, 15, 30, 0.8);
+  background: var(--input-bg-focus);
 }
 
 select option {
-  background: #111827;
-  color: #ffffff;
+  background: var(--dialog-bg);
+  color: var(--text);
 }
 
 .full-width {
@@ -591,11 +650,11 @@ td {
 }
 
 tbody tr:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--surface-hover);
 }
 
 .prospect-name {
-  color: #ffffff;
+  color: var(--text);
   font-weight: 600;
   font-size: 14px;
 }
@@ -733,9 +792,9 @@ tbody tr:hover {
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
   padding: 0;
-  background: #111827;
+  background: var(--dialog-bg);
   color: var(--text);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
   margin: auto;
   position: fixed;
   inset: 0;
@@ -748,7 +807,7 @@ tbody tr:hover {
 }
 
 .detail-dialog::backdrop {
-  background: rgba(3, 7, 18, 0.8);
+  background: rgba(3, 7, 18, 0.7);
   backdrop-filter: blur(8px);
 }
 
@@ -762,7 +821,7 @@ tbody tr:hover {
 
 .detail-header h3 {
   font-size: 20px;
-  color: #ffffff;
+  color: var(--text);
 }
 
 .detail-body {
@@ -780,7 +839,7 @@ tbody tr:hover {
 
 .detail-item {
   padding: 16px;
-  background: rgba(255,255,255,0.02);
+  background: var(--surface-soft);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
 }
@@ -797,17 +856,17 @@ tbody tr:hover {
 
 .detail-item strong,
 .detail-item p {
-  color: #ffffff;
+  color: var(--text);
   font-size: 14px;
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
 .detail-item p {
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--detail-p-bg);
   padding: 12px;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid var(--surface-border);
   font-family: monospace;
   white-space: pre-wrap;
 }
@@ -818,7 +877,7 @@ tbody tr:hover {
   gap: 12px;
   border-top: 1px solid var(--line);
   padding: 20px 24px;
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--surface-soft);
 }
 
 /* Empty states */
@@ -850,6 +909,41 @@ tbody tr:hover {
   border-radius: 4px;
   font-size: 12px;
   font-family: monospace;
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--surface-border);
+  color: var(--text-soft);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* In dark mode: show sun, hide moon */
+html[data-theme="dark"] .theme-toggle-btn .moon-icon {
+  display: none;
+}
+html[data-theme="dark"] .theme-toggle-btn .sun-icon {
+  display: block;
+}
+
+/* In light mode: show moon, hide sun */
+html[data-theme="light"] .theme-toggle-btn .sun-icon {
+  display: none;
+}
+html[data-theme="light"] .theme-toggle-btn .moon-icon {
+  display: block;
 }
 
 /* Responsive adjustments */
