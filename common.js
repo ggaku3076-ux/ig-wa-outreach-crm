@@ -6,6 +6,10 @@ document.documentElement.setAttribute("data-theme", savedTheme);
 const STORAGE_KEY = "ig-wa-outreach-crm.prospects";
 const SETTINGS_KEY = "ig-wa-outreach-crm.settings";
 
+// Global Sync Status tracking
+window.lastSyncStatus = "checking";
+window.lastSyncError = null;
+
 const statusOptions = [
   "Belum dikirim",
   "Sudah dikirim",
@@ -89,7 +93,11 @@ function getSupabaseClient() {
       return supabaseClient;
     } catch (e) {
       console.error("Gagal inisialisasi Supabase:", e);
+      window.lastSyncStatus = "error";
+      window.lastSyncError = e.message;
     }
+  } else if (!settings.supabaseUrl || !settings.supabaseKey) {
+    window.lastSyncStatus = "local";
   }
   return null;
 }
@@ -97,7 +105,10 @@ function getSupabaseClient() {
 // Sync prospects with Supabase
 async function syncProspects() {
   const client = getSupabaseClient();
-  if (!client) return readLocalProspects();
+  if (!client) {
+    updateSyncBadge();
+    return readLocalProspects();
+  }
 
   try {
     const localData = readLocalProspects();
@@ -108,7 +119,10 @@ async function syncProspects() {
       .select("*");
       
     if (error) {
-      console.warn("Gagal mengambil data dari Supabase (mungkin tabel belum dibuat):", error);
+      console.warn("Gagal mengambil data dari Supabase:", error);
+      window.lastSyncStatus = "error";
+      window.lastSyncError = error.message + " (Tabel 'prospects' mungkin belum dibuat di Supabase, atau RLS aktif tanpa policy SELECT)";
+      updateSyncBadge();
       return localData;
     }
 
@@ -160,12 +174,22 @@ async function syncProspects() {
         
       if (upsertError) {
         console.error("Gagal mengupload perubahan ke Supabase:", upsertError);
+        window.lastSyncStatus = "error";
+        window.lastSyncError = upsertError.message + " (Penyebab umum: RLS / Row Level Security di Supabase masih aktif tapi policy INSERT/UPDATE belum dibuat)";
+        updateSyncBadge();
+        return mergedList;
       }
     }
 
+    window.lastSyncStatus = "synced";
+    window.lastSyncError = null;
+    updateSyncBadge();
     return mergedList;
   } catch (err) {
     console.error("Gagal melakukan sinkronisasi:", err);
+    window.lastSyncStatus = "error";
+    window.lastSyncError = err.message;
+    updateSyncBadge();
     return readLocalProspects();
   }
 }
@@ -189,10 +213,16 @@ async function saveProspect(prospectData) {
   const client = getSupabaseClient();
   if (client) {
     try {
-      await client.from("prospects").upsert([prospectData]);
+      const { error } = await client.from("prospects").upsert([prospectData]);
+      if (error) throw error;
+      window.lastSyncStatus = "synced";
+      window.lastSyncError = null;
     } catch (e) {
       console.error("Gagal menyimpan ke Supabase secara langsung:", e);
+      window.lastSyncStatus = "error";
+      window.lastSyncError = e.message + " (Gagal menyimpan ke cloud. Periksa RLS/tabel Supabase)";
     }
+    updateSyncBadge();
   }
   
   return localData;
@@ -207,10 +237,16 @@ async function deleteProspect(id) {
   const client = getSupabaseClient();
   if (client) {
     try {
-      await client.from("prospects").delete().eq("id", id);
+      const { error } = await client.from("prospects").delete().eq("id", id);
+      if (error) throw error;
+      window.lastSyncStatus = "synced";
+      window.lastSyncError = null;
     } catch (e) {
       console.error("Gagal menghapus dari Supabase:", e);
+      window.lastSyncStatus = "error";
+      window.lastSyncError = e.message + " (Gagal menghapus dari cloud)";
     }
+    updateSyncBadge();
   }
   return localData;
 }
