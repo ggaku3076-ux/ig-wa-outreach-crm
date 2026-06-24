@@ -8,6 +8,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const saveSupabaseBtn = document.querySelector("#saveSupabaseBtn");
   const disconnectSupabaseBtn = document.querySelector("#disconnectSupabaseBtn");
 
+  const supabaseDiagnostics = document.querySelector("#supabase-diagnostics");
+  const diagnosticLog = document.querySelector("#diagnostic-log");
+  const testSyncBtn = document.querySelector("#testSyncBtn");
+  const forceUploadBtn = document.querySelector("#forceUploadBtn");
+
   const messageTemplateEl = document.querySelector("#messageTemplate");
   const saveTemplateBtn = document.querySelector("#saveTemplateBtn");
   const resetTemplateBtn = document.querySelector("#resetTemplateBtn");
@@ -29,7 +34,135 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const activeTemplate = settings.activeTemplate || "default";
     messageTemplateEl.value = settings.templates[activeTemplate] || settings.templates["default"];
+
+    if (settings.supabaseUrl && settings.supabaseKey) {
+      supabaseDiagnostics.classList.remove("hidden");
+      runDiagnostics();
+    } else {
+      supabaseDiagnostics.classList.add("hidden");
+    }
   }
+
+  // Diagnostics functions
+  function addLog(message, type = "info") {
+    const entry = document.createElement("div");
+    entry.style.padding = "2px 0";
+    entry.style.lineHeight = "1.4";
+    if (type === "success") {
+      entry.innerHTML = `<span style="color:var(--green-text); font-weight:bold;">[OK]</span> ${message}`;
+    } else if (type === "error") {
+      entry.innerHTML = `<span style="color:var(--red-text); font-weight:bold;">[ERROR]</span> ${message}`;
+    } else if (type === "warning") {
+      entry.innerHTML = `<span style="color:var(--yellow-text); font-weight:bold;">[INFO]</span> ${message}`;
+    } else {
+      entry.innerHTML = `<span style="color:var(--muted);">[INFO]</span> ${message}`;
+    }
+    diagnosticLog.appendChild(entry);
+    diagnosticLog.scrollTop = diagnosticLog.scrollHeight;
+  }
+
+  async function runDiagnostics() {
+    diagnosticLog.innerHTML = "";
+    addLog("Memulai tes koneksi database cloud...");
+
+    const client = getSupabaseClient();
+    if (!client) {
+      addLog("Koneksi Supabase belum aktif (URL/Key kosong).", "error");
+      return;
+    }
+
+    addLog("Klien Supabase berhasil diinisialisasi.", "success");
+
+    // Test 1: SELECT access
+    try {
+      addLog("Menguji akses baca (SELECT) tabel 'prospects'...");
+      const { data, error } = await client
+        .from("prospects")
+        .select("id");
+
+      if (error) throw error;
+
+      addLog(`Akses baca berhasil. Ditemukan ${data.length} prospek di database cloud.`, "success");
+    } catch (e) {
+      addLog(`Gagal membaca tabel: ${e.message}`, "error");
+      addLog("Solusi: Pastikan Anda sudah membuat tabel 'prospects' di SQL Editor Supabase, dan matikan RLS (atau tambahkan policy READ).", "warning");
+      return;
+    }
+
+    // Test 2: WRITE access
+    const testId = "test-sync-" + Date.now();
+    try {
+      addLog("Menguji akses tulis (INSERT/UPSERT)...");
+      const testRow = {
+        id: testId,
+        name: "Test Sync Connection Row",
+        updatedAt: new Date().toISOString()
+      };
+
+      const { error } = await client.from("prospects").upsert([testRow]);
+      if (error) throw error;
+
+      addLog("Akses tulis berhasil.", "success");
+
+      // Clean up
+      addLog("Membersihkan data uji coba...");
+      const { error: deleteError } = await client.from("prospects").delete().eq("id", testId);
+      if (deleteError) throw deleteError;
+      
+      addLog("Pembersihan berhasil. Koneksi & Akses 100% Berjalan! 🟢", "success");
+    } catch (e) {
+      addLog(`Gagal menulis data: ${e.message}`, "error");
+      addLog("Solusi: RLS (Row Level Security) kemungkinan masih aktif di Supabase. Anda harus me-nonaktifkan RLS (Disable RLS) atau menambahkan policy INSERT/UPDATE/DELETE agar web di HP & PC bisa saling terhubung.", "warning");
+    }
+  }
+
+  // Bind Diagnostic actions
+  testSyncBtn.addEventListener("click", runDiagnostics);
+
+  forceUploadBtn.addEventListener("click", async () => {
+    const currentProspects = readLocalProspects();
+    if (currentProspects.length === 0) {
+      alert("Tidak ada data prospek lokal di browser ini untuk diunggah.");
+      return;
+    }
+
+    const confirmUpload = confirm(`PENTING: Unggah paksa ${currentProspects.length} prospek lokal ke Supabase Cloud?\n\nSemua data di cloud dengan ID yang sama akan digantikan dengan data laptop ini.`);
+    if (!confirmUpload) return;
+
+    const client = getSupabaseClient();
+    if (!client) {
+      alert("Supabase belum terhubung!");
+      return;
+    }
+
+    try {
+      forceUploadBtn.textContent = "Mengunggah data...";
+      forceUploadBtn.disabled = true;
+
+      const now = new Date().toISOString();
+      const updatedList = currentProspects.map(p => ({
+        ...p,
+        updatedAt: now
+      }));
+
+      addLog(`Mengunggah paksa ${updatedList.length} data lokal ke awan...`);
+      
+      const { error } = await client.from("prospects").upsert(updatedList);
+      if (error) throw error;
+
+      saveLocalProspects(updatedList);
+      addLog(`Unggah paksa berhasil! ${updatedList.length} data lokal terunggah.`, "success");
+      alert(`Berhasil mengunggah paksa ${updatedList.length} data prospek ke database cloud.`);
+      
+      await runDiagnostics();
+    } catch (e) {
+      alert("Gagal unggah data: " + e.message);
+      addLog(`Unggah paksa gagal: ${e.message}`, "error");
+    } finally {
+      forceUploadBtn.textContent = "Unggah Paksa Semua Data Lokal ke Cloud";
+      forceUploadBtn.disabled = false;
+    }
+  });
 
   // Save Supabase Settings
   saveSupabaseBtn.addEventListener("click", async () => {
@@ -49,17 +182,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     supabaseClient = null;
 
     try {
-      const client = getSupabaseClient();
-      if (!client) {
-        throw new Error("Gagal menginisialisasi klien Supabase. Periksa kembali URL dan Kunci.");
-      }
-
       saveSupabaseBtn.textContent = "Menghubungkan...";
       saveSupabaseBtn.disabled = true;
 
       // Test connection by fetching or syncing
       const synced = await syncProspects();
-      alert("Koneksi Supabase berhasil! Data lokal dan awan telah disinkronkan.");
+      alert("Koneksi Supabase berhasil disimpan! Data lokal dan awan diselaraskan.");
       updateSyncBadge();
     } catch (e) {
       alert("Gagal terhubung ke Supabase. Periksa konsol browser atau input Anda.");

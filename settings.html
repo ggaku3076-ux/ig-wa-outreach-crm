@@ -46,6 +46,18 @@
                 <button id="disconnectSupabaseBtn" type="button" class="danger-button" style="min-height:36px; padding:0 16px; font-size:12px;">Putuskan Koneksi</button>
               </div>
 
+              <!-- Diagnostics & Sync Actions -->
+              <div id="supabase-diagnostics" class="hidden" style="margin-top: 16px; padding: 16px; border: 1px solid var(--line); border-radius: var(--radius-md); background: rgba(0,0,0,0.15);">
+                <p style="font-weight:600; font-size:13px; margin-bottom: 8px; color: var(--primary);">Alat Diagnostik & Tindakan Sinkronisasi:</p>
+                <div id="diagnostic-log" style="font-family: monospace; font-size:11px; color: var(--text-soft); max-height: 150px; overflow-y: auto; margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                  <!-- Log entries will be added here -->
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <button id="testSyncBtn" type="button" class="mini-button" style="font-size:11px; min-height: 32px;">Uji Koneksi & Tabel</button>
+                  <button id="forceUploadBtn" type="button" class="mini-button success" style="font-size:11px; min-height: 32px;">Unggah Paksa Semua Data Lokal ke Cloud</button>
+                </div>
+              </div>
+
               <!-- Integration Steps Guide -->
               <details style="margin-top: 12px; font-size: 12px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px;">
                 <summary style="cursor:pointer; font-weight:600; color: var(--text-soft);">Cara Setup Tabel Supabase (Klik untuk melihat)</summary>
