@@ -1004,12 +1004,171 @@ html[data-theme="light"] .theme-toggle-btn .moon-icon {
   }
 }
 
+@media (max-width: 768px) {
+  .page-shell {
+    width: min(100% - 24px, 1280px);
+    padding: 16px 0 40px;
+  }
+
+  /* Table to Cards Transformation on Mobile */
+  .table-wrap {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  table, tbody, tr, td {
+    display: block;
+    width: 100%;
+  }
+
+  table thead {
+    display: none; /* Hide header columns */
+  }
+
+  tbody tr {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+  }
+
+  tbody tr:hover {
+    background: var(--surface-hover);
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    text-align: right;
+  }
+
+  /* Prospect Name (First column) acts as Card Header */
+  td:first-child {
+    display: block;
+    text-align: left;
+    padding-top: 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--line);
+  }
+
+  td:first-child .prospect-name {
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+
+  /* Action row (Last column) at the bottom */
+  td:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+    padding-top: 14px;
+    justify-content: flex-end;
+  }
+
+  /* Pseudo-label injection for mobile fields */
+  td:nth-child(2)::before {
+    content: "Kontak";
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  td:nth-child(3)::before {
+    content: "Jasa";
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  td:nth-child(4)::before {
+    content: "Tanggal";
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  td:nth-child(5)::before {
+    content: "Status";
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Align status select nicely in mobile card */
+  td select.status-select {
+    margin-left: auto;
+  }
+
+  .action-row {
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  /* Hide scrollbars on navigation scroll */
+  .side-nav {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .side-nav::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}
+
 @media (max-width: 640px) {
+  .app-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+    padding: 20px 16px;
+  }
+
+  .brand {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .side-nav {
+    width: 100%;
+    justify-content: space-around;
+  }
+
   .stats-grid {
     grid-template-columns: 1fr;
   }
   
   .detail-grid {
     grid-template-columns: 1fr;
+  }
+
+  .hero-panel {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .follow-up-card {
+    min-width: 100%;
   }
 }
