@@ -66,20 +66,20 @@
                   <li>Buka <b>SQL Editor</b> lalu jalankan SQL berikut untuk membuat tabel:
                     <pre style="background:rgba(0,0,0,0.3); padding:8px; border-radius:4px; font-family:monospace; margin-top:4px; overflow-x:auto; user-select:all; white-space:pre-wrap;">
 CREATE TABLE prospects (
-  id TEXT PRIMARY KEY,
-  name TEXT,
-  niche TEXT,
-  service TEXT,
-  source TEXT,
-  instagram TEXT,
-  instagramLink TEXT,
-  whatsapp TEXT,
-  sentDate TEXT,
-  channel TEXT,
-  status TEXT,
-  followUpDate TEXT,
-  notes TEXT,
-  updatedAt TEXT
+  "id" TEXT PRIMARY KEY,
+  "name" TEXT,
+  "niche" TEXT,
+  "service" TEXT,
+  "source" TEXT,
+  "instagram" TEXT,
+  "instagramLink" TEXT,
+  "whatsapp" TEXT,
+  "sentDate" TEXT,
+  "channel" TEXT,
+  "status" TEXT,
+  "followUpDate" TEXT,
+  "notes" TEXT,
+  "updatedAt" TEXT
 );</pre>
                   </li>
                   <li>Matikan <b>RLS (Row Level Security)</b> untuk tabel <code>prospects</code> agar aplikasi client-side bisa menulis data langsung, atau tambahkan policy public read/write.</li>
