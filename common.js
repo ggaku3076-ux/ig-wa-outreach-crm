@@ -5,6 +5,19 @@ document.documentElement.setAttribute("data-theme", savedTheme);
 // Key for local storage
 const STORAGE_KEY = "ig-wa-outreach-crm.prospects";
 const SETTINGS_KEY = "ig-wa-outreach-crm.settings";
+const DELETED_KEY = "ig-wa-outreach-crm.deleted";
+
+function getDeletedIds() {
+  try {
+    return JSON.parse(localStorage.getItem(DELETED_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveDeletedIds(ids) {
+  localStorage.setItem(DELETED_KEY, JSON.stringify(ids));
+}
 
 // Global Sync Status tracking
 window.lastSyncStatus = "checking";
@@ -112,9 +125,26 @@ async function syncProspects() {
 
   try {
     const localData = readLocalProspects();
-    
+    const deletedIds = getDeletedIds();
+
+    // Step A: Process pending deletes in Supabase first
+    if (deletedIds.length > 0) {
+      for (const dId of [...deletedIds]) {
+        try {
+          const { error } = await client.from("prospects").delete().eq("id", dId);
+          if (error) throw error;
+          
+          // Successful cloud delete: remove from local tombstone list
+          const currentDeleted = getDeletedIds().filter(x => x !== dId);
+          saveDeletedIds(currentDeleted);
+        } catch (e) {
+          console.warn(`Gagal memproses pending delete untuk ID ${dId}:`, e);
+        }
+      }
+    }
+
     // 1. Fetch cloud data
-    const { data: cloudData, error } = await client
+    let { data: cloudData, error } = await client
       .from("prospects")
       .select("*");
       
@@ -125,6 +155,10 @@ async function syncProspects() {
       updateSyncBadge();
       return localData;
     }
+
+    // Step B: Filter out any cloud records that were deleted locally but still exist in cloud
+    const finalDeletedIds = getDeletedIds();
+    cloudData = cloudData.filter(cp => !finalDeletedIds.includes(cp.id));
 
     // 2. Merge algorithm (Compare updatedAt)
     const mergedMap = new Map();
@@ -230,21 +264,35 @@ async function saveProspect(prospectData) {
 
 // Delete single prospect
 async function deleteProspect(id) {
+  // 1. Add to tombstone list to prevent sync re-pulling it
+  const deleted = getDeletedIds();
+  if (!deleted.includes(id)) {
+    deleted.push(id);
+    saveDeletedIds(deleted);
+  }
+
+  // 2. Remove locally
   let localData = readLocalProspects();
   localData = localData.filter(p => p.id !== id);
   saveLocalProspects(localData);
 
+  // 3. Try to delete from cloud
   const client = getSupabaseClient();
   if (client) {
     try {
       const { error } = await client.from("prospects").delete().eq("id", id);
       if (error) throw error;
+      
+      // Success: remove from local tombstone list
+      const currentDeleted = getDeletedIds().filter(dId => dId !== id);
+      saveDeletedIds(currentDeleted);
+
       window.lastSyncStatus = "synced";
       window.lastSyncError = null;
     } catch (e) {
       console.error("Gagal menghapus dari Supabase:", e);
       window.lastSyncStatus = "error";
-      window.lastSyncError = e.message + " (Gagal menghapus dari cloud)";
+      window.lastSyncError = e.message + " (Gagal menghapus dari cloud. ID disimpan untuk dicoba kembali)";
     }
     updateSyncBadge();
   }
